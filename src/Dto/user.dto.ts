@@ -28,5 +28,3 @@ export class UserDto {
     Object.assign(this, dto);
   }
 }
-
-module.exports = { SwaggerDto: UserDto, UserDto };

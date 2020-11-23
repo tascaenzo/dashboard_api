@@ -13,7 +13,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
       mail: schema.mail,
       name: schema.name,
       surname: schema.surname,
-      password: schema.password,
+      //password: schema.password,
     });
   }
 
