@@ -7,7 +7,7 @@ export class UserDocument extends Document {
   username: string;
 
   @Prop()
-  mail: string;
+  email: string;
 
   @Prop()
   name: string;

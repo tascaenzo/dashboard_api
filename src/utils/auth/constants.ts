@@ -1,5 +1,5 @@
 export const jwtConstants = {
-  secret: 'SECRET_KEY',
+  secret: 'xwxgcxGR8V1HdRRTTDfg5dsw88fS2IrQL5dPkAN2HdbqT9qWA83BhIg6u794',
   signOptions: {
     expiresIn: '2h',
   },

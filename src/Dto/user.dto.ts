@@ -9,7 +9,7 @@ export class UserDto {
   readonly id: Types.ObjectId;
 
   @IsEmail()
-  readonly mail: string;
+  readonly email: string;
 
   @IsString()
   readonly username: string;

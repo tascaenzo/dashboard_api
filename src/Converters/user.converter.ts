@@ -10,7 +10,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
     return new UserDto({
       id: schema._id,
       username: schema.username,
-      mail: schema.mail,
+      email: schema.email,
       name: schema.name,
       surname: schema.surname,
       //password: schema.password,
@@ -20,7 +20,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
   toSchema(dto: UserDto): UserDocument {
     return <UserDocument>{
       username: dto.username,
-      mail: dto.mail,
+      email: dto.email,
       name: dto.name,
       surname: dto.surname,
       password: dto.password,
