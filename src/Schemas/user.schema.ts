@@ -4,9 +4,6 @@ import { Document } from 'mongoose';
 @Schema()
 export class UserDocument extends Document {
   @Prop()
-  username: string;
-
-  @Prop()
   email: string;
 
   @Prop()
