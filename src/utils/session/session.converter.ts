@@ -8,7 +8,7 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
   toDto(schema: SessionDocument): SessionDto {
     return new SessionDto({
       id: schema._id,
-      userId: schema.userId,
+      user: schema.user,
       ip: schema.ip,
       browser: schema.browser,
       os: schema.os,

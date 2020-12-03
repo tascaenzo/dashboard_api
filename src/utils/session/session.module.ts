@@ -1,13 +1,22 @@
 import { MongooseModule } from '@nestjs/mongoose';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { SessionSchema } from './session.schema';
 import { SessionController } from './session.controller';
 import { SessionConverter } from './session.converter';
 import { SessionService } from './session.service';
+import * as redisStore from 'cache-manager-redis-store';
+import { UserModule } from '@/Modules/user.module';
 
 @Module({
   imports: [
+    UserModule,
     MongooseModule.forFeature([{ name: 'Session', schema: SessionSchema }]),
+    CacheModule.register({
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
+      ttl: 3600 * 12, //12h
+    }),
   ],
   controllers: [SessionController],
   providers: [SessionConverter, SessionService],
