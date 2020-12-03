@@ -3,6 +3,7 @@ import { UserService } from '@/Services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { jwtAuth, LoginDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +17,30 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    console.log(typeof user);
 
+    const token = this.jwtService.sign({ ...user });
+
+    /* Generate Refresh Token */
+    if (dto.remember) {
+      const refreshToken = this.jwtService.sign(token, {
+        expiresIn: jwtConstants.expiresRefreshTokenIn,
+      });
+
+      return {
+        token,
+        refreshToken,
+        expiredToken: jwtConstants.expiresIn,
+        expiredRefreshToken: jwtConstants.expiresRefreshTokenIn,
+        user,
+      };
+    }
+
+    /* Not Generate Refresh Token */
     return {
-      token: this.jwtService.sign({ ...user }),
-      expired: null,
+      token,
+      refreshToken: null,
+      expiredToken: jwtConstants.expiresIn,
+      expiredRefreshToken: null,
       user,
     };
   }
