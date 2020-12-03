@@ -1,17 +1,17 @@
+//import { CacheInterceptor, UseInterceptors } from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common';
-//import { CacheInterceptor, UseInterceptors } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AController } from '@/utils/crud/AController';
-import { UserDto } from '@/Dto/user.dto';
-import { UserService } from '@/Services/user.service';
 import { ApiTags } from '@nestjs/swagger';
+import { SessionDto } from './session.dto';
+import { SessionService } from './session.service';
 
-@ApiTags('Users')
+@ApiTags('Session')
+@Controller('Sessions')
 //@UseInterceptors(CacheInterceptor)
-@Controller('users')
-export class UserController extends AController<UserDto> {
-  constructor(protected readonly service: UserService) {
+export class SessionController extends AController<SessionDto> {
+  constructor(protected readonly service: SessionService) {
     super(service);
   }
 
@@ -23,17 +23,17 @@ export class UserController extends AController<UserDto> {
    */
 
   @Post()
-  create(@Body() dto: UserDto): Promise<UserDto> {
+  create(@Body() dto: SessionDto): Promise<SessionDto> {
     return super.create(dto);
   }
 
   @Get()
-  findAll(): Promise<UserDto[]> {
+  findAll(): Promise<SessionDto[]> {
     return super.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserDto> {
+  findOne(@Param('id') id: string): Promise<SessionDto> {
     return super.findOne(id);
   }
 
@@ -42,7 +42,7 @@ export class UserController extends AController<UserDto> {
     return super.remove(id);
   }
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UserDto) {
+  update(@Param('id') id: string, @Body() dto: SessionDto) {
     return super.update(id, dto);
   }
 }
