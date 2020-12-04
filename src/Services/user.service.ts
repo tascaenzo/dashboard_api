@@ -6,7 +6,6 @@ import { AService } from '@/utils/crud/AService';
 import { UserConverter } from '@/Converters/user.converter';
 import { UserDto } from '@/Dto/user.dto';
 import { UserDocument } from '@/Schemas/user.schema';
-import { LoginDto } from '@/utils/auth/auth.dto';
 
 @Injectable()
 export class UserService extends AService<UserDocument, UserDto> {
@@ -17,7 +16,10 @@ export class UserService extends AService<UserDocument, UserDto> {
     super(repository, converter);
   }
 
-  async findByEmailPasswor(loginDto: LoginDto): Promise<UserDto> {
+  async findByEmailPasswor(loginDto: {
+    email: string;
+    password: string;
+  }): Promise<UserDto> {
     try {
       return this.converter.toDto(await this.repository.findOne(loginDto));
     } catch (e) {

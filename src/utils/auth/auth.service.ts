@@ -13,7 +13,10 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<jwtAuth> {
-    const user: UserDto = await this.usersService.findByEmailPasswor(dto);
+    const user: UserDto = await this.usersService.findByEmailPasswor({
+      email: dto.email,
+      password: dto.password,
+    });
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -22,9 +25,12 @@ export class AuthService {
 
     /* Generate Refresh Token */
     if (dto.remember) {
-      const refreshToken = this.jwtService.sign(token, {
-        expiresIn: jwtConstants.expiresRefreshTokenIn,
-      });
+      const refreshToken = this.jwtService.sign(
+        { ...user },
+        {
+          expiresIn: jwtConstants.expiresRefreshTokenIn,
+        },
+      );
 
       return {
         token,
