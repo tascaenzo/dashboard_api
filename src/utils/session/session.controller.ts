@@ -1,4 +1,4 @@
-import { CacheInterceptor, UseGuards, UseInterceptors } from '@nestjs/common';
+//import { CacheInterceptor, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
@@ -6,11 +6,11 @@ import { AController } from '@/utils/crud/AController';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionDto } from './session.dto';
 import { SessionService } from './session.service';
-import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
+//import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 
 @ApiTags('Session')
 @Controller('sessions')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 //@Roles('develop')
 //@UseInterceptors(CacheInterceptor)
 export class SessionController extends AController<SessionDto> {
@@ -31,13 +31,12 @@ export class SessionController extends AController<SessionDto> {
   }
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
   findAll(): Promise<SessionDto[]> {
+    this.service.findByToken('stocazzo');
     return super.findAll();
   }
 
   @Get(':id')
-  @UseInterceptors(CacheInterceptor)
   findOne(@Param('id') id: string): Promise<SessionDto> {
     return super.findOne(id);
   }

@@ -1,8 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(
+    //private readonly usersService: UserService,
+    private readonly jwtService: JwtService,
+  ) {
+    super();
+  }
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    try {
+      const token = context
+        .switchToHttp()
+        .getRequest()
+        .headers.authorization.split(' ')[1];
+
+      const user = this.jwtService.verify(token);
+      console.log(user);
+      //if (user === null) return false;
+
+      return true;
+    } catch (e) {
+      throw new ForbiddenException(e.message);
+    }
+  }
+}
 
 /*
 import {

@@ -26,10 +26,8 @@ export class AuthService {
     /* Generate Refresh Token */
     if (dto.remember) {
       const refreshToken = this.jwtService.sign(
-        { ...user },
-        {
-          expiresIn: jwtConstants.expiresRefreshTokenIn,
-        },
+        { token },
+        { expiresIn: jwtConstants.expiresRefreshTokenIn },
       );
 
       return {

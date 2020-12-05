@@ -10,7 +10,8 @@ import { UserDocument } from '@/Schemas/user.schema';
 @Injectable()
 export class UserService extends AService<UserDocument, UserDto> {
   constructor(
-    @InjectModel('User') protected readonly repository: Model<UserDocument>,
+    @InjectModel('User')
+    protected readonly repository: Model<UserDocument>,
     protected readonly converter: UserConverter,
   ) {
     super(repository, converter);
