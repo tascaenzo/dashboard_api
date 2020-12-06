@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { UserDocument } from '@/Schemas/user.schema';
+import { UserDto } from '@/Dto/user.dto';
 import {
   IsDate,
   IsInt,
@@ -20,16 +20,16 @@ export class SessionDto {
   readonly id: Types.ObjectId;
 
   @IsObject()
-  readonly user: UserDocument;
+  readonly user: UserDto;
 
   @IsIP()
   readonly ip: string;
 
   @IsString()
-  readonly browser: string;
+  readonly userAgent: string;
 
-  @IsString()
-  readonly os: string;
+  //@IsString()
+  //readonly os: string;
 
   @IsJWT()
   readonly token: string;
@@ -47,8 +47,8 @@ export class SessionDto {
   @IsDate()
   readonly refreshedAt: Date;
 
-  @IsDate()
-  readonly expiredAt: Date;
+  @IsString()
+  readonly expiredAt: string;
 
   public constructor(dto?: Partial<SessionDto>) {
     Object.assign(this, dto);

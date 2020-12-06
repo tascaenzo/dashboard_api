@@ -1,24 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { UserDocument } from '@/Schemas/user.schema';
+import { UserDto } from '@/Dto/user.dto';
 
 @Schema()
 export class SessionDocument extends Document {
   @Prop({
-    type: UserDocument,
+    type: UserDto,
     //ref: UserSchema,
     required: true,
   })
-  user: UserDocument;
+  user: UserDto;
 
   @Prop()
   ip: string;
 
   @Prop()
-  browser: string;
+  userAgent: string;
 
-  @Prop()
-  os: string;
+  //@Prop()
+  //os: string;
 
   @Prop()
   token: string;
@@ -36,7 +36,7 @@ export class SessionDocument extends Document {
   refreshedAt: Date;
 
   @Prop({ default: null })
-  expiredAt: Date;
+  expiredAt: string;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionDocument);

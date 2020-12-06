@@ -6,10 +6,12 @@ import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
+import { SessionModule } from '../session/session.module';
 
 @Module({
   imports: [
     UserModule,
+    SessionModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
