@@ -7,6 +7,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UserConverter extends AConverter<UserDocument, UserDto> {
   toDto(schema: UserDocument): UserDto {
+    if (schema === null) return null;
     return new UserDto({
       id: schema._id,
       email: schema.email,
@@ -17,6 +18,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
   }
 
   toSchema(dto: UserDto): UserDocument {
+    if (dto === null) return null;
     return <UserDocument>{
       email: dto.email,
       name: dto.name,

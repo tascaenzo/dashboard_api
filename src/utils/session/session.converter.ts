@@ -6,6 +6,7 @@ import { SessionDocument } from './session.schema';
 @Injectable()
 export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
   toDto(schema: SessionDocument): SessionDto {
+    if (schema === null) return null;
     return new SessionDto({
       id: schema._id,
       user: schema.user,
@@ -22,6 +23,7 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
   }
 
   toSchema(dto: SessionDto): SessionDocument {
+    if (dto === null) return null;
     return <SessionDocument>{
       //id: schema._id,
       //userId: dto.userId,
