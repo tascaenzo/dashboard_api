@@ -48,7 +48,10 @@ export class SessionDto {
   readonly refreshedAt: Date;
 
   @IsString()
-  readonly expiredAt: string;
+  readonly expiredTokenAt: string;
+
+  @IsString()
+  readonly expiredSessionAt: string;
 
   public constructor(dto?: Partial<SessionDto>) {
     Object.assign(this, dto);

@@ -19,7 +19,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  getProfile(@Headers('authorization') jwt: string): UserDto {
-    return this.authService.me(jwt);
+  async getProfile(@Headers('authorization') jwt: string): Promise<UserDto> {
+    return await this.authService.me(jwt);
   }
 }

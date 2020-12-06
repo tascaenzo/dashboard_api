@@ -27,6 +27,7 @@
     "@nestjs/mongoose": "^7.1.0",
     "@nestjs/passport": "^7.1.4",
     "@nestjs/platform-fastify": "^7.5.4",
+    "@nestjs/schedule": "^0.4.1",
     "@nestjs/swagger": "^4.7.5",
     "cache-manager": "^3.4.0",
     "cache-manager-redis-store": "^2.0.0",

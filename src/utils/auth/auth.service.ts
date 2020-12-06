@@ -5,7 +5,6 @@ import { JwtAuth, LoginDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
 import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
-//import { SessionDto } from '../session/session.dto';
 import { Types } from 'mongoose';
 
 @Injectable()
@@ -48,22 +47,28 @@ export class AuthService {
       refreshNumber: 0,
       createAt: new Date(),
       refreshedAt: null,
-      expiredAt: jwtConstants.expiresIn,
+      expiredTokenAt: jwtConstants.expiresIn,
+      expiredSessionAt:
+        refreshToken !== null
+          ? jwtConstants.expiresRefreshTokenIn
+          : jwtConstants.expiresIn,
     });
 
     return {
       token,
       refreshToken,
       expiredToken: jwtConstants.expiresIn,
-      expiredRefreshToken: jwtConstants.expiresRefreshTokenIn,
+      expiredRefreshToken:
+        refreshToken !== null ? jwtConstants.expiresRefreshTokenIn : null,
       user,
     };
   }
 
-  me(jwt: string): UserDto {
+  async me(jwt: string): Promise<UserDto> {
     const pyload: any = this.jwtService.decode(jwt.replace('Bearer ', ''));
-    delete pyload.exp;
-    delete pyload.iat;
-    return <UserDto>pyload;
+    const session = await this.sessionService.findOne(pyload.sessionId);
+    //delete pyload.exp;
+    //delete pyload.iat;
+    return session.user;
   }
 }

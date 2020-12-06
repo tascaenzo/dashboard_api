@@ -36,7 +36,10 @@ export class SessionDocument extends Document {
   refreshedAt: Date;
 
   @Prop({ default: null })
-  expiredAt: string;
+  expiredTokenAt: string;
+
+  @Prop({ default: null })
+  expiredSessionAt: string;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionDocument);

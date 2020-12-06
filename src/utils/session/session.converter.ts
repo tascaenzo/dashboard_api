@@ -18,7 +18,8 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
       refreshNumber: schema.refreshNumber,
       createAt: schema.createAt,
       refreshedAt: schema.refreshedAt,
-      expiredAt: schema.expiredAt,
+      expiredTokenAt: schema.expiredTokenAt,
+      expiredSessionAt: schema.expiredSessionAt,
     });
   }
 
@@ -35,7 +36,8 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
       refreshNumber: dto.refreshNumber,
       createAt: dto.createAt,
       refreshedAt: dto.refreshedAt,
-      expiredAt: dto.expiredAt,
+      expiredTokenAt: dto.expiredTokenAt,
+      expiredSessionAt: dto.expiredSessionAt,
     };
   }
 }
