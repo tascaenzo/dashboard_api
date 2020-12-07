@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { AService } from '@/utils/crud/AService';
@@ -27,8 +27,8 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     //this.repository.
   }
 
-  /*   async findOne(id: string): Promise<SessionDto> {
-    let sessionCache: SessionDto = await this.cacheManager.get(id);
+  async findOne(id: Types.ObjectId): Promise<SessionDto> {
+    let sessionCache: SessionDto = await this.cacheManager.get(id.toString());
     if (sessionCache !== null) {
       return sessionCache;
     }
@@ -36,9 +36,8 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     sessionCache = await super.findOne(id);
 
     if (sessionCache !== null) {
-      await this.cacheManager.set(id, sessionCache);
+      await this.cacheManager.set(id.toString(), sessionCache);
     }
-
     return sessionCache;
   }
 
@@ -59,5 +58,25 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
 
     return sessionCache;
   }
-   */
+
+  /* Override to remove cache */
+  async remove(id: Types.ObjectId): Promise<void> {
+    const session = await super.findOne(id);
+    if (session !== null) {
+      this.cacheManager.del(id.toString());
+      this.cacheManager.del(session.token);
+    }
+    return await super.remove(id);
+  }
+
+  /* Override to remove cache */
+  async update(id: Types.ObjectId, dto: SessionDto) {
+    const session = await super.findOne(id);
+    if (session !== null) {
+      this.cacheManager.del(id.toString());
+      this.cacheManager.del(session.token);
+    }
+    this.cacheManager.del(id.toString());
+    return await super.update(id, dto);
+  }
 }
