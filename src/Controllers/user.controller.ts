@@ -6,6 +6,7 @@ import { AController } from '@/utils/crud/AController';
 import { UserDto } from '@/Dto/user.dto';
 import { UserService } from '@/Services/user.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Types } from 'mongoose';
 
 @ApiTags('Users')
 //@UseInterceptors(CacheInterceptor)
@@ -33,16 +34,16 @@ export class UserController extends AController<UserDto> {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserDto> {
+  findOne(@Param('id') id: Types.ObjectId): Promise<UserDto> {
     return super.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<void> {
     return super.remove(id);
   }
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UserDto) {
+  update(@Param('id') id: Types.ObjectId, @Body() dto: UserDto) {
     return super.update(id, dto);
   }
 }

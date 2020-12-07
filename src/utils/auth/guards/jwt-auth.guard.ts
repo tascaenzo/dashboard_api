@@ -23,7 +23,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         .headers.authorization.split(' ')[1];
 
       const user = this.jwtService.verify(token);
-      console.log(user);
+      //console.log(user);
       //if (user === null) return false;
 
       return true;

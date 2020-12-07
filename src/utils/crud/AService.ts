@@ -1,6 +1,6 @@
 import { IConverter } from './IConverter';
 import { IService } from './IService';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Document } from 'mongoose';
 
 export abstract class AService<Schema, Dto> implements IService<Dto> {
@@ -19,15 +19,15 @@ export abstract class AService<Schema, Dto> implements IService<Dto> {
     return this.converter.toDtoList(await this.repository.find());
   }
 
-  async findOne(id: string): Promise<Dto> {
+  async findOne(id: Types.ObjectId): Promise<Dto> {
     return this.converter.toDto(await this.repository.findById(id));
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: Types.ObjectId): Promise<void> {
     return await this.repository.findById(id).remove();
   }
 
-  async update(id: string, dto: Dto) {
+  async update(id: Types.ObjectId, dto: Dto) {
     return await this.repository.findByIdAndUpdate(
       id,
       this.converter.toSchema(dto),

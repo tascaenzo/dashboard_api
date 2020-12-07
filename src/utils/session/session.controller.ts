@@ -6,6 +6,7 @@ import { AController } from '@/utils/crud/AController';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionDto } from './session.dto';
 import { SessionService } from './session.service';
+import { Types } from 'mongoose';
 //import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 
 @ApiTags('Session')
@@ -32,21 +33,20 @@ export class SessionController extends AController<SessionDto> {
 
   @Get()
   findAll(): Promise<SessionDto[]> {
-    this.service.findByToken('stocazzo');
     return super.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<SessionDto> {
+  findOne(@Param('id') id: Types.ObjectId): Promise<SessionDto> {
     return super.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<void> {
     return super.remove(id);
   }
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: SessionDto) {
+  update(@Param('id') id: Types.ObjectId, @Body() dto: SessionDto) {
     return super.update(id, dto);
   }
 }

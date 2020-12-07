@@ -1,6 +1,7 @@
 import { Body, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IService } from './IService';
 import { IController } from './IController';
+import { Types } from 'mongoose';
 
 export abstract class AController<Dto> implements IController<Dto> {
   constructor(protected readonly service: IService<Dto>) {}
@@ -22,17 +23,17 @@ export abstract class AController<Dto> implements IController<Dto> {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Dto> {
+  findOne(@Param('id') id: Types.ObjectId): Promise<Dto> {
     return this.service.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<void> {
     return this.service.remove(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: Dto) {
+  update(@Param('id') id: Types.ObjectId, @Body() dto: Dto) {
     return this.service.update(id, dto);
   }
 }

@@ -27,7 +27,7 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     //this.repository.
   }
 
-  async findOne(id: string): Promise<SessionDto> {
+  /*   async findOne(id: string): Promise<SessionDto> {
     let sessionCache: SessionDto = await this.cacheManager.get(id);
     if (sessionCache !== null) {
       return sessionCache;
@@ -59,4 +59,5 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
 
     return sessionCache;
   }
+   */
 }

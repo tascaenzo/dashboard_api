@@ -66,9 +66,14 @@ export class AuthService {
 
   async me(jwt: string): Promise<UserDto> {
     const pyload: any = this.jwtService.decode(jwt.replace('Bearer ', ''));
-    const session = await this.sessionService.findOne(pyload.sessionId);
+    //console.log(pyload.sessionId)
+    const session = await this.sessionService.findOne(
+      new Types.ObjectId(pyload.sessionId),
+    );
+    console.log(session);
     //delete pyload.exp;
     //delete pyload.iat;
-    return session.user;
+    //return session.user;
+    return null;
   }
 }
