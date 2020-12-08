@@ -6,7 +6,6 @@ import { UserDto } from '@/Dto/user.dto';
 export class SessionDocument extends Document {
   @Prop({
     type: Types.ObjectId,
-    index: true,
     required: true,
     auto: false,
   })
@@ -24,9 +23,6 @@ export class SessionDocument extends Document {
   @Prop()
   userAgent: string;
 
-  //@Prop()
-  //os: string;
-
   @Prop()
   token: string;
 
@@ -36,17 +32,17 @@ export class SessionDocument extends Document {
   @Prop({ default: 0 })
   refreshNumber: number;
 
-  @Prop({ default: new Date() })
-  createAt: Date;
-
   @Prop({ default: null })
   refreshedAt: Date;
 
   @Prop({ default: null })
   expiredTokenAt: string;
 
-  @Prop({ default: null })
-  expiredSessionAt: string;
+  @Prop({ type: Date })
+  expiredSessionAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionDocument);

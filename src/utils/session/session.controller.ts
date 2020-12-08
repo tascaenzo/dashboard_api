@@ -26,6 +26,11 @@ export class SessionController extends AController<SessionDto> {
    * reals and not generics <dto>
    */
 
+  @Delete('/expired')
+  removeSessionExpired(): void {
+    this.service.removeSessionExpired();
+  }
+
   @Post()
   create(@Body() dto: SessionDto): Promise<SessionDto> {
     return super.create(dto);
@@ -42,7 +47,7 @@ export class SessionController extends AController<SessionDto> {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: Types.ObjectId): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<SessionDto> {
     return super.remove(id);
   }
   @Put(':id')

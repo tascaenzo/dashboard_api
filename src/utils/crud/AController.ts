@@ -28,7 +28,7 @@ export abstract class AController<Dto> implements IController<Dto> {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: Types.ObjectId): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<Dto> {
     return this.service.remove(id);
   }
 

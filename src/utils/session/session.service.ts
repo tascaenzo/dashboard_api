@@ -22,23 +22,17 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
 
   /* All day at 12.00 PM remove session expired from db */
   @Cron('0 0 0 * * *')
-  removeSessionExpired() {
-    this.logger.log('Remove session expired');
-    //this.repository.
-  }
+  async removeSessionExpired() {
+    this.logger.log('Remove sessions expired');
 
-  async findOne(id: Types.ObjectId): Promise<SessionDto> {
-    let sessionCache: SessionDto = await this.cacheManager.get(id.toString());
-    if (sessionCache !== null) {
-      return sessionCache;
-    }
+    const sessionList = await this.findAll();
 
-    sessionCache = await super.findOne(id);
-
-    if (sessionCache !== null) {
-      await this.cacheManager.set(id.toString(), sessionCache);
-    }
-    return sessionCache;
+    sessionList.forEach((el) => {
+      if (el.expiredSessionAt < new Date()) {
+        this.logger.log('Remove Session - ' + el.id);
+        this.remove(el.id);
+      }
+    });
   }
 
   async findByToken(token: string): Promise<SessionDto> {
@@ -59,8 +53,23 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     return sessionCache;
   }
 
+  /* Override to save or return cache */
+  async findOne(id: Types.ObjectId): Promise<SessionDto> {
+    let sessionCache: SessionDto = await this.cacheManager.get(id.toString());
+    if (sessionCache !== null) {
+      return sessionCache;
+    }
+
+    sessionCache = await super.findOne(id);
+
+    if (sessionCache !== null) {
+      await this.cacheManager.set(id.toString(), sessionCache);
+    }
+    return sessionCache;
+  }
+
   /* Override to remove cache */
-  async remove(id: Types.ObjectId): Promise<void> {
+  async remove(id: Types.ObjectId): Promise<SessionDto> {
     const session = await super.findOne(id);
     if (session !== null) {
       this.cacheManager.del(id.toString());

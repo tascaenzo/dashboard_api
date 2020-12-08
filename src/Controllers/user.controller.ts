@@ -39,7 +39,7 @@ export class UserController extends AController<UserDto> {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: Types.ObjectId): Promise<void> {
+  remove(@Param('id') id: Types.ObjectId): Promise<UserDto> {
     return super.remove(id);
   }
   @Put(':id')

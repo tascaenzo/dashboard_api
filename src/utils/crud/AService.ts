@@ -23,8 +23,9 @@ export abstract class AService<Schema, Dto> implements IService<Dto> {
     return this.converter.toDto(await this.repository.findById(id));
   }
 
-  async remove(id: Types.ObjectId): Promise<void> {
-    return await this.repository.findById(id).remove();
+  async remove(id: Types.ObjectId): Promise<Dto> {
+    //return await this.repository.findById(id).remove();
+    return this.converter.toDto(await this.repository.findByIdAndDelete(id));
   }
 
   async update(id: Types.ObjectId, dto: Dto) {

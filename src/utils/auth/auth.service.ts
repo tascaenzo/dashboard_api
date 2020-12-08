@@ -37,6 +37,25 @@ export class AuthService {
       : /* Not Generate Refresh Token */
         null;
 
+    let seconds: number;
+    let expiredSessionAtString =
+      refreshToken !== null
+        ? jwtConstants.expiresRefreshTokenIn
+        : jwtConstants.expiresIn;
+
+    if (expiredSessionAtString.includes('s')) {
+      expiredSessionAtString = expiredSessionAtString.replace('s', '');
+      seconds = parseInt(expiredSessionAtString);
+    }
+    if (expiredSessionAtString.includes('h')) {
+      expiredSessionAtString = expiredSessionAtString.replace('h', '');
+      seconds = parseInt(expiredSessionAtString) * 3600;
+    }
+
+    const expiredSessionAt: Date = new Date(
+      new Date().getTime() + seconds * 1000,
+    );
+
     await this.sessionService.create({
       id: sessionId,
       user,
@@ -45,13 +64,10 @@ export class AuthService {
       token,
       refreshToken,
       refreshNumber: 0,
-      createAt: new Date(),
+      createdAt: null,
       refreshedAt: null,
       expiredTokenAt: jwtConstants.expiresIn,
-      expiredSessionAt:
-        refreshToken !== null
-          ? jwtConstants.expiresRefreshTokenIn
-          : jwtConstants.expiresIn,
+      expiredSessionAt,
     });
 
     return {
