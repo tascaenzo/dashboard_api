@@ -1,4 +1,4 @@
-import { Model, Types } from 'mongoose';
+import { isValidObjectId, Model, Types } from 'mongoose';
 import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { AService } from '@/utils/crud/AService';
@@ -76,6 +76,19 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
       this.cacheManager.del(session.token);
     }
     return await super.remove(id);
+  }
+
+  async removeByUser(id: Types.ObjectId) {
+    /* not useed this code because not remove cache */
+    /* return await this.repository.remove({ 'user.id': new Types.ObjectId(id) }); */
+
+    const lists = await this.repository.find({
+      'user.id': new Types.ObjectId(id),
+    });
+
+    lists.forEach((el) => {
+      this.remove(el.id);
+    });
   }
 
   /* Override to remove cache */

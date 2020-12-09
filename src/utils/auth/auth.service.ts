@@ -6,6 +6,7 @@ import { UserDto } from '@/Dto/user.dto';
 import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
 import { Types } from 'mongoose';
+import { SessionDto } from '../session/session.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +26,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const sessionId = new Types.ObjectId();
-    const token = this.jwtService.sign({ sessionId, userId: user.id });
+    const session = await this.sessionService.create(<SessionDto>{ user });
+
+    const token = this.jwtService.sign({
+      session: session.id,
+      userId: user.id,
+    });
 
     const refreshToken = dto.remember
       ? /* Generate Refresh Token */
@@ -56,8 +61,8 @@ export class AuthService {
       new Date().getTime() + seconds * 1000,
     );
 
-    await this.sessionService.create({
-      id: sessionId,
+    await this.sessionService.update(session.id, {
+      id: null,
       user,
       ip: req.ip,
       userAgent: req.headers['user-agent'],

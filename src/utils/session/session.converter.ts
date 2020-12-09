@@ -25,7 +25,7 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
   toSchema(dto: SessionDto): SessionDocument {
     if (dto === null) return null;
     return <SessionDocument>{
-      _id: dto.id,
+      //_id: dto.id,
       user: dto.user,
       ip: dto.ip,
       userAgent: dto.userAgent,
