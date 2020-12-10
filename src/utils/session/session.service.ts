@@ -1,4 +1,4 @@
-import { isValidObjectId, Model, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { AService } from '@/utils/crud/AService';
@@ -36,21 +36,13 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
   }
 
   async findByToken(token: string): Promise<SessionDto> {
-    let sessionCache: SessionDto = await this.cacheManager.get(token);
+    return this.converter.toDto(await this.repository.findOne({ token }));
+  }
 
-    if (sessionCache !== null) {
-      return sessionCache;
-    }
-
-    sessionCache = this.converter.toDto(
-      await this.repository.findOne({ token }),
+  async findByUser(id: Types.ObjectId): Promise<SessionDto[]> {
+    return this.converter.toDtoList(
+      await this.repository.find({ 'user.id': new Types.ObjectId(id) }),
     );
-
-    if (sessionCache !== null) {
-      await this.cacheManager.set(token, sessionCache);
-    }
-
-    return sessionCache;
   }
 
   /* Override to save or return cache */
@@ -72,13 +64,15 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
   async remove(id: Types.ObjectId): Promise<SessionDto> {
     const session = await super.findOne(id);
     if (session !== null) {
-      this.cacheManager.del(id.toString());
-      this.cacheManager.del(session.token);
+      if (this.cacheManager.get(id.toString()) !== null) {
+        this.cacheManager.del(id.toString());
+      }
     }
     return await super.remove(id);
   }
 
-  async removeByUser(id: Types.ObjectId) {
+  /* it does not remove currentSessionId but if you want to delete everything set it to null  */
+  async removeByUser(id: Types.ObjectId, currentSessionId: Types.ObjectId) {
     /* not useed this code because not remove cache */
     /* return await this.repository.remove({ 'user.id': new Types.ObjectId(id) }); */
 
@@ -87,16 +81,21 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     });
 
     lists.forEach((el) => {
-      this.remove(el.id);
+      if (currentSessionId !== el.id) {
+        this.remove(el.id);
+      }
     });
   }
 
   /* Override to remove cache */
   async update(id: Types.ObjectId, dto: SessionDto) {
     const session = await super.findOne(id);
+
     if (session !== null) {
-      this.cacheManager.del(id.toString());
-      this.cacheManager.del(session.token);
+      const cacheById = await this.cacheManager.get(session.id.toString());
+      if (cacheById !== null) {
+        this.cacheManager.del(session.id.toString());
+      }
     }
     this.cacheManager.del(id.toString());
     return await super.update(id, dto);

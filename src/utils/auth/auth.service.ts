@@ -5,7 +5,6 @@ import { JwtAuth, LoginDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
 import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
-import { Types } from 'mongoose';
 import { SessionDto } from '../session/session.dto';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class AuthService {
     const session = await this.sessionService.create(<SessionDto>{ user });
 
     const token = this.jwtService.sign({
-      session: session.id,
+      sessionId: session.id,
       userId: user.id,
     });
 
@@ -87,9 +86,7 @@ export class AuthService {
 
   async me(jwt: string): Promise<UserDto> {
     const pyload: any = this.jwtService.decode(jwt.replace('Bearer ', ''));
-    const session = await this.sessionService.findOne(
-      new Types.ObjectId(pyload.sessionId),
-    );
+    const session = await this.sessionService.findOne(pyload.sessionId);
     return session.user;
   }
 }

@@ -31,6 +31,16 @@ export class SessionController extends AController<SessionDto> {
     this.service.removeSessionExpired();
   }
 
+  @Delete('/byUser/:id')
+  removeSessionByUser(@Param('id') id: Types.ObjectId): void {
+    this.service.removeByUser(id, null);
+  }
+
+  @Get('/byUser/:id')
+  findByUser(@Param('id') id: Types.ObjectId): Promise<SessionDto[]> {
+    return this.service.findByUser(id);
+  }
+
   @Post()
   create(@Body() dto: SessionDto): Promise<SessionDto> {
     return super.create(dto);
