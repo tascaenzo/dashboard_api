@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '@/Services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuth, LoginDto } from './auth.dto';
+import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
 import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
@@ -9,13 +9,15 @@ import { SessionDto } from '../session/session.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly sessionService: SessionService,
   ) {}
 
-  async login(dto: LoginDto, req): Promise<JwtAuth> {
+  async login(dto: LoginDto, req): Promise<JwtAuthDto> {
     const user: UserDto = await this.usersService.findByEmailPasswor({
       email: dto.email,
       password: dto.password,
@@ -82,6 +84,33 @@ export class AuthService {
         refreshToken !== null ? jwtConstants.expiresRefreshTokenIn : null,
       user,
     };
+  }
+
+  async refresh(dto: RefreshTokenDto): Promise<JwtAuthDto> {
+    try {
+      const pyloadRefreshToken = await this.jwtService.verify(dto.refreshToken);
+      const pyloadToken = this.jwtService.decode(pyloadRefreshToken.token);
+      const session = await this.sessionService.findOne(
+        pyloadToken['sessionId'],
+      );
+
+      if (
+        session !== null &&
+        session.token === dto.token &&
+        session.token === pyloadRefreshToken.token &&
+        session.refreshToken === dto.refreshToken
+      ) {
+        //posso aggiornare il token
+        this.logger.debug('devo aggiornare');
+        return new JwtAuthDto();
+      }
+
+      //throw new UnauthorizedException('Invalid refresh token');
+    } catch (error) {
+      this.logger.error(error);
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    return new JwtAuthDto();
   }
 
   async me(jwt: string): Promise<UserDto> {

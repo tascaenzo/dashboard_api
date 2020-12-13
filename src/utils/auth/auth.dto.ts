@@ -23,7 +23,7 @@ export class LoginDto {
   }
 }
 
-export class JwtAuth {
+export class JwtAuthDto {
   @IsJWT()
   readonly token: string;
 
@@ -39,7 +39,15 @@ export class JwtAuth {
   @IsDate()
   readonly expiredRefreshToken: string;
 
-  public constructor(dto?: Partial<JwtAuth>) {
+  public constructor(dto?: Partial<JwtAuthDto>) {
     Object.assign(this, dto);
   }
+}
+
+export class RefreshTokenDto {
+  @IsJWT()
+  readonly token: string;
+
+  @IsJWT()
+  readonly refreshToken: string;
 }
