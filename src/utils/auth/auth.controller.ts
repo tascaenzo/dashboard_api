@@ -1,5 +1,5 @@
 import { UserDto } from '@/Dto/user.dto';
-import { Body, Controller, Get, Headers, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, Put, Req } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
@@ -17,9 +17,12 @@ export class AuthController {
     return this.authService.login(dto, req);
   }
 
-  @Post('refresh')
-  async refreshToken(@Body() dto: RefreshTokenDto): Promise<JwtAuthDto> {
-    return await this.authService.refresh(dto);
+  @Put('refresh')
+  async refreshToken(
+    @Body() dto: RefreshTokenDto,
+    @Req() req,
+  ): Promise<JwtAuthDto> {
+    return await this.authService.refresh(dto, req);
   }
 
   @Get('me')

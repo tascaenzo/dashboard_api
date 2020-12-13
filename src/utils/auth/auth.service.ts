@@ -86,13 +86,21 @@ export class AuthService {
     };
   }
 
-  async refresh(dto: RefreshTokenDto): Promise<JwtAuthDto> {
+  async refresh(dto: RefreshTokenDto, req): Promise<JwtAuthDto> {
     try {
       const pyloadRefreshToken = await this.jwtService.verify(dto.refreshToken);
       const pyloadToken = this.jwtService.decode(pyloadRefreshToken.token);
-      const session = await this.sessionService.findOne(
+      const session: SessionDto = await this.sessionService.findOne(
         pyloadToken['sessionId'],
       );
+
+      if (Date.now() < pyloadToken['exp'] * 1000) {
+        throw new UnauthorizedException('Current token is not expired');
+      }
+
+      if (new Date() > session.expiredSessionAt) {
+        throw new UnauthorizedException('Current session is expired');
+      }
 
       if (
         session !== null &&
@@ -100,17 +108,59 @@ export class AuthService {
         session.token === pyloadRefreshToken.token &&
         session.refreshToken === dto.refreshToken
       ) {
-        //posso aggiornare il token
-        this.logger.debug('devo aggiornare');
-        return new JwtAuthDto();
+        /* Generate new token and new refreshToken */
+        const token = this.jwtService.sign({
+          sessionId: session.id,
+          userId: session.user.id,
+        });
+
+        const refreshToken = this.jwtService.sign(
+          { token },
+          { expiresIn: jwtConstants.expiresRefreshTokenIn },
+        );
+
+        let seconds: number;
+        let expiredSessionAtString = jwtConstants.expiresRefreshTokenIn;
+
+        if (expiredSessionAtString.includes('s')) {
+          expiredSessionAtString = expiredSessionAtString.replace('s', '');
+          seconds = parseInt(expiredSessionAtString);
+        }
+        if (expiredSessionAtString.includes('h')) {
+          expiredSessionAtString = expiredSessionAtString.replace('h', '');
+          seconds = parseInt(expiredSessionAtString) * 3600;
+        }
+
+        const expiredSessionAt: Date = new Date(
+          new Date().getTime() + seconds * 1000,
+        );
+
+        await this.sessionService.update(session.id, <SessionDto>{
+          ip: req.ip,
+          user: session.user,
+          userAgent: req.headers['user-agent'],
+          token,
+          refreshToken,
+          refreshNumber: session.refreshNumber + 1,
+          refreshedAt: new Date(),
+          expiredTokenAt: jwtConstants.expiresIn,
+          expiredSessionAt,
+        });
+
+        return {
+          token,
+          refreshToken,
+          expiredToken: jwtConstants.expiresIn,
+          expiredRefreshToken: jwtConstants.expiresRefreshTokenIn,
+          user: session.user,
+        };
       }
 
-      //throw new UnauthorizedException('Invalid refresh token');
-    } catch (error) {
-      this.logger.error(error);
       throw new UnauthorizedException('Invalid refresh token');
+    } catch (e) {
+      this.logger.error(e);
+      throw new UnauthorizedException(e.message);
     }
-    return new JwtAuthDto();
   }
 
   async me(jwt: string): Promise<UserDto> {
