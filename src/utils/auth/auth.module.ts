@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '@/Modules/user.module';
 import { AuthService } from './auth.service';
-import { jwtConstants } from './constants';
+import { jwtRegister } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { SessionModule } from '../session/session.module';
@@ -13,10 +13,7 @@ import { SessionModule } from '../session/session.module';
     UserModule,
     SessionModule,
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
-    }),
+    JwtModule.register(jwtRegister),
   ],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],

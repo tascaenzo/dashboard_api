@@ -39,7 +39,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       this.logger.warn('Auth fail session not valid');
       return false;
     } catch (e) {
-      this.logger.error(e);
+      console.log(e);
       throw new ForbiddenException(e.message);
     }
   }

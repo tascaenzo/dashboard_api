@@ -1,4 +1,4 @@
-import { Delete, Get, Post, Put } from '@nestjs/common';
+import { Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common';
 //import { CacheInterceptor, UseInterceptors } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
@@ -7,10 +7,11 @@ import { UserDto } from '@/Dto/user.dto';
 import { UserService } from '@/Services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { JwtAuthGuard } from '@/utils/auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
-//@UseInterceptors(CacheInterceptor)
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserController extends AController<UserDto> {
   constructor(protected readonly service: UserService) {
     super(service);
