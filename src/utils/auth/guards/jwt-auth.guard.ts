@@ -22,11 +22,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      const token = context
-        .switchToHttp()
-        .getRequest()
-        .headers.authorization.split(' ')[1];
+      const request = context.switchToHttp().getRequest();
+      const { authorization } = request.headers;
 
+      if (authorization === undefined || authorization === null) {
+        throw new ForbiddenException();
+      }
+
+      const token = authorization.split(' ')[1];
       const pyload = this.jwtService.verify(token);
       const session = await this.sessionService.findOne(
         new Types.ObjectId(pyload.sessionId),
