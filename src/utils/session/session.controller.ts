@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Req, UseGuards } from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
@@ -12,8 +12,6 @@ import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 @ApiTags('Session')
 @Controller('sessions')
 @UseGuards(JwtAuthGuard)
-//@Roles('develop')
-//@UseInterceptors(CacheInterceptor)
 export class SessionController extends AController<SessionDto> {
   constructor(protected readonly service: SessionService) {
     super(service);
@@ -34,6 +32,12 @@ export class SessionController extends AController<SessionDto> {
   @Delete('/byUser/:id')
   removeSessionByUser(@Param('id') id: Types.ObjectId): void {
     this.service.removeByUser(id, null);
+  }
+
+  @Delete('/me')
+  removeSessionMe(@Req() req): void {
+    const token = req.headers.authorization.split(' ')[1];
+    this.service.removeMe(token);
   }
 
   @Get('/byUser/:id')

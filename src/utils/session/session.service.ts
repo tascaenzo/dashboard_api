@@ -81,10 +81,17 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     });
 
     lists.forEach((el) => {
-      if (currentSessionId !== el.id) {
-        this.remove(el.id);
+      if (currentSessionId === null || currentSessionId === undefined) {
+        this.remove(el._id);
+      } else if (currentSessionId.toString() !== el._id.toString()) {
+        this.remove(el._id);
       }
     });
+  }
+
+  async removeMe(token: string) {
+    const session = await this.findByToken(token);
+    this.removeByUser(session.user.id, session.id);
   }
 
   /* Override to remove cache */
