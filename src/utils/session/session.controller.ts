@@ -45,6 +45,19 @@ export class SessionController extends AController<SessionDto> {
     return this.service.findByUser(id);
   }
 
+  @Get('/me')
+  async findMe(@Req() req): Promise<SessionDto[]> {
+    const token = req.headers.authorization.split(' ')[1];
+    const { id } = (await this.service.findByToken(token)).user;
+    return this.service.findByUser(id);
+  }
+
+  @Get('/current')
+  async findCurrent(@Req() req): Promise<SessionDto> {
+    const token = req.headers.authorization.split(' ')[1];
+    return await this.service.findByToken(token);
+  }
+
   @Post()
   create(@Body() dto: SessionDto): Promise<SessionDto> {
     return super.create(dto);
