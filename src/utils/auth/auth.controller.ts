@@ -1,12 +1,10 @@
 import { UserDto } from '@/Dto/user.dto';
 import { Body, Controller, Get, Headers, Post, Put, Req } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-@ApiTags('Auth')
 @Controller('auth')
 @Controller()
 export class AuthController {

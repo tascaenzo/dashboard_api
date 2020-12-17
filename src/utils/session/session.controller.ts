@@ -1,15 +1,13 @@
 import { Req, UseGuards } from '@nestjs/common';
-import { Delete, Get, Post, Put } from '@nestjs/common';
+import { Delete, Get, Put } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AController } from '@/utils/crud/AController';
-import { ApiTags } from '@nestjs/swagger';
 import { SessionDto } from './session.dto';
 import { SessionService } from './session.service';
 import { Types } from 'mongoose';
 import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 
-@ApiTags('Session')
 @Controller('sessions')
 @UseGuards(JwtAuthGuard)
 export class SessionController extends AController<SessionDto> {
@@ -58,25 +56,6 @@ export class SessionController extends AController<SessionDto> {
     return await this.service.findByToken(token);
   }
 
-  @Post()
-  create(@Body() dto: SessionDto): Promise<SessionDto> {
-    return super.create(dto);
-  }
-
-  @Get()
-  findAll(): Promise<SessionDto[]> {
-    return super.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: Types.ObjectId): Promise<SessionDto> {
-    return super.findOne(id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: Types.ObjectId): Promise<SessionDto> {
-    return super.remove(id);
-  }
   @Put(':id')
   update(@Param('id') id: Types.ObjectId, @Body() dto: SessionDto) {
     return super.update(id, dto);
