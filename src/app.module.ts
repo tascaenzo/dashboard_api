@@ -18,6 +18,7 @@ import { jwtRegister } from './utils/auth/constants';
     JwtModule.register(jwtRegister),
     MongooseModule.forRoot('mongodb://localhost:27017/api_test', {
       useCreateIndex: true,
+      useFindAndModify: false,
     }),
   ],
   controllers: [AppController],
