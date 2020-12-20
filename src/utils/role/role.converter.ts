@@ -40,6 +40,7 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     return <RoleDocument>{
       name: dto.name,
       isRoot: dto.isRoot,
+      isDevelop: dto.isDevelop,
       collections,
       createdAt: dto.createdAt,
     };

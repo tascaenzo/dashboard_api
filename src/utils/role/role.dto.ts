@@ -20,8 +20,8 @@ export class RoleDto {
   @IsBoolean()
   readonly isRoot: boolean;
 
-  //@IsBoolean()
-  //readonly isDevelop: boolean;
+  @IsBoolean()
+  readonly isDevelop: boolean;
 
   @IsArray()
   collections: RoleCollectionDto[];
