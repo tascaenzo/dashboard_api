@@ -8,9 +8,11 @@ import { SessionModule } from '@/utils/session/session.module';
 import { AppController } from './Controllers/app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtRegister } from './utils/auth/constants';
+import { RoleModule } from './utils/role/role.module';
 
 @Module({
   imports: [
+    RoleModule,
     AuthModule,
     SessionModule,
     UserModule,
