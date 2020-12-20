@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { UserDto } from '@/Dto/user.dto';
+import { RoleCollectionDocument } from '../role/collection/role.collection.schema';
 
 @Schema()
 export class SessionDocument extends Document {
@@ -36,6 +37,11 @@ export class SessionDocument extends Document {
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
+
+  public constructor(document?: Partial<RoleCollectionDocument>) {
+    super();
+    Object.assign(this, document);
+  }
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionDocument);
