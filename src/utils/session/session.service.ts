@@ -6,6 +6,7 @@ import { SessionDocument } from './session.schema';
 import { SessionDto } from './session.dto';
 import { SessionConverter } from './session.converter';
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import { UserDto } from '@/Dto/user.dto';
 
 @Injectable()
 export class SessionService extends AService<SessionDocument, SessionDto> {
@@ -106,5 +107,12 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     }
     this.cacheManager.del(id.toString());
     return await super.update(id, dto);
+  }
+
+  async updateUserSessions(userDto: UserDto) {
+    const sessionList: SessionDto[] = await this.findByUser(userDto.id);
+    sessionList.forEach((el: SessionDto) => {
+      this.update(el.id, new SessionDto({ ...el, user: userDto }));
+    });
   }
 }
