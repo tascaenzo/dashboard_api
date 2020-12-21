@@ -3,9 +3,11 @@ import { UserService } from '@/Services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
-import { jwtConstants } from './constants';
+//import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
 import { SessionDto } from '../session/session.dto';
+
+import { JWT_CONFIG } from '@/utils/env.json';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +40,7 @@ export class AuthService {
       ? /* Generate Refresh Token */
         this.jwtService.sign(
           { token },
-          { expiresIn: jwtConstants.expiresRefreshTokenIn },
+          { expiresIn: JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN },
         )
       : /* Not Generate Refresh Token */
         null;
@@ -46,8 +48,8 @@ export class AuthService {
     let seconds: number;
     let expiredSessionAtString =
       refreshToken !== null
-        ? jwtConstants.expiresRefreshTokenIn
-        : jwtConstants.expiresIn;
+        ? JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN
+        : JWT_CONFIG.EXPIRES_IN;
 
     if (expiredSessionAtString.includes('s')) {
       expiredSessionAtString = expiredSessionAtString.replace('s', '');
@@ -72,16 +74,16 @@ export class AuthService {
       refreshNumber: 0,
       createdAt: null,
       refreshedAt: null,
-      expiredTokenAt: jwtConstants.expiresIn,
+      expiredTokenAt: JWT_CONFIG.EXPIRES_IN,
       expiredSessionAt,
     });
 
     return {
       token,
       refreshToken,
-      expiredToken: jwtConstants.expiresIn,
+      expiredToken: JWT_CONFIG.EXPIRES_IN,
       expiredRefreshToken:
-        refreshToken !== null ? jwtConstants.expiresRefreshTokenIn : null,
+        refreshToken !== null ? JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN : null,
       user,
     };
   }
@@ -116,11 +118,11 @@ export class AuthService {
 
         const refreshToken = this.jwtService.sign(
           { token },
-          { expiresIn: jwtConstants.expiresRefreshTokenIn },
+          { expiresIn: JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN },
         );
 
         let seconds: number;
-        let expiredSessionAtString = jwtConstants.expiresRefreshTokenIn;
+        let expiredSessionAtString = JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN;
 
         if (expiredSessionAtString.includes('s')) {
           expiredSessionAtString = expiredSessionAtString.replace('s', '');
@@ -143,15 +145,15 @@ export class AuthService {
           refreshToken,
           refreshNumber: session.refreshNumber + 1,
           refreshedAt: new Date(),
-          expiredTokenAt: jwtConstants.expiresIn,
+          expiredTokenAt: JWT_CONFIG.EXPIRES_IN,
           expiredSessionAt,
         });
 
         return {
           token,
           refreshToken,
-          expiredToken: jwtConstants.expiresIn,
-          expiredRefreshToken: jwtConstants.expiresRefreshTokenIn,
+          expiredToken: JWT_CONFIG.EXPIRES_IN,
+          expiredRefreshToken: JWT_CONFIG.EXPIRES_REFRESH_TOKEN_IN,
           user: session.user,
         };
       }

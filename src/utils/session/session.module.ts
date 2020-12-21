@@ -4,8 +4,10 @@ import { SessionSchema } from './session.schema';
 import { SessionController } from './session.controller';
 import { SessionConverter } from './session.converter';
 import { SessionService } from './session.service';
-import * as redisStore from 'cache-manager-redis-store';
 import { UserModule } from '@/Modules/user.module';
+import * as redisStore from 'cache-manager-redis-store';
+
+import { CACHE_CONFIG } from '@/utils/env.json';
 
 @Module({
   imports: [
@@ -13,9 +15,9 @@ import { UserModule } from '@/Modules/user.module';
     MongooseModule.forFeature([{ name: 'Session', schema: SessionSchema }]),
     CacheModule.register({
       store: redisStore,
-      host: 'localhost',
-      port: 6379,
-      ttl: 3600 * 12, //12h
+      host: CACHE_CONFIG.HOST,
+      port: CACHE_CONFIG.PORT,
+      ttl: CACHE_CONFIG.TTL, //12h
     }),
   ],
   controllers: [SessionController],

@@ -2,8 +2,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
-//import * as helmet from 'fastify-helmet';
 import { AppModule } from './app.module';
+import { PORT, BIND_ADDRESS } from '@/utils/env.json';
+//import * as helmet from 'fastify-helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -14,6 +15,6 @@ async function bootstrap() {
   /* automatically validates the DTO in the body request */
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(PORT, BIND_ADDRESS);
 }
 bootstrap();

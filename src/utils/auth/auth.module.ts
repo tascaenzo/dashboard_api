@@ -3,10 +3,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '@/Modules/user.module';
 import { AuthService } from './auth.service';
-import { jwtRegister } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { SessionModule } from '../session/session.module';
+
+import { JWT_CONFIG } from '@/utils/env.json';
+
+const jwtRegister = {
+  secret: JWT_CONFIG.SECRET,
+  signOptions: { expiresIn: JWT_CONFIG.EXPIRES_IN },
+};
 
 @Global()
 @Module({
