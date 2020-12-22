@@ -19,7 +19,30 @@ export class UserDto {
 
   @IsOptional()
   @IsString()
-  readonly password: string;
+  password: string;
+
+  public constructor(dto?: Partial<UserDto>) {
+    Object.assign(this, dto);
+  }
+}
+
+@Injectable()
+export class UserCreateDto {
+  @IsMongoId()
+  @IsOptional()
+  readonly id: Types.ObjectId;
+
+  @IsEmail()
+  readonly email: string;
+
+  @IsString()
+  readonly name: string;
+
+  @IsString()
+  readonly surname: string;
+
+  @IsString()
+  password: string;
 
   public constructor(dto?: Partial<UserDto>) {
     Object.assign(this, dto);

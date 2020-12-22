@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 import { AService } from '@/utils/crud/AService';
 import { UserConverter } from '@/Converters/user.converter';
@@ -17,12 +18,30 @@ export class UserService extends AService<UserDocument, UserDto> {
     super(repository, converter);
   }
 
+  async create(dto: UserDto): Promise<UserDto> {
+    if (dto.password === undefined || dto.password === null) {
+      throw new Error('Validation password fail');
+    }
+    dto.password = await bcrypt.hash(dto.password, 10);
+    return super.create(dto);
+  }
+
   async findByEmailPasswor(loginDto: {
     email: string;
     password: string;
   }): Promise<UserDto> {
     try {
-      return this.converter.toDto(await this.repository.findOne(loginDto));
+      const user: UserDocument = await this.repository.findOne({
+        email: loginDto.email,
+      });
+
+      if (
+        user !== null &&
+        bcrypt.compareSync(loginDto.password, user.password)
+      ) {
+        return this.converter.toDto(user);
+      }
+      return null;
     } catch (e) {
       return null;
     }
