@@ -17,10 +17,6 @@ export class UserDto {
   @IsString()
   readonly surname: string;
 
-  @IsOptional()
-  @IsString()
-  password: string;
-
   public constructor(dto?: Partial<UserDto>) {
     Object.assign(this, dto);
   }
@@ -44,7 +40,7 @@ export class UserCreateDto {
   @IsString()
   password: string;
 
-  public constructor(dto?: Partial<UserDto>) {
+  public constructor(dto?: Partial<UserCreateDto>) {
     Object.assign(this, dto);
   }
 }

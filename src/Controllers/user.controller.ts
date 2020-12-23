@@ -1,20 +1,25 @@
-import { Body, Delete, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Delete, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AController } from '@/utils/crud/AController';
-import { UserDto } from '@/Dto/user.dto';
+import { UserCreateDto, UserDto } from '@/Dto/user.dto';
 import { UserService } from '@/Services/user.service';
 import { JwtAuthGuard } from '@/utils/auth/guards/jwt-auth.guard';
 import { Types } from 'mongoose';
 import { SessionService } from '@/utils/session/session.service';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 export class UserController extends AController<UserDto> {
   constructor(
     protected readonly service: UserService,
     protected readonly sessionService: SessionService,
   ) {
     super(service);
+  }
+
+  @Post()
+  create(@Body() dto: UserCreateDto): Promise<UserDto> {
+    return this.service.create(dto);
   }
 
   @Delete(':id')

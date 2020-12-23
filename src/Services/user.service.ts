@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 import { AService } from '@/utils/crud/AService';
 import { UserConverter } from '@/Converters/user.converter';
-import { UserDto } from '@/Dto/user.dto';
+import { UserCreateDto, UserDto } from '@/Dto/user.dto';
 import { UserDocument } from '@/Schemas/user.schema';
 
 @Injectable()
@@ -18,12 +18,14 @@ export class UserService extends AService<UserDocument, UserDto> {
     super(repository, converter);
   }
 
-  async create(dto: UserDto): Promise<UserDto> {
+  async create(dto: UserCreateDto): Promise<UserDto> {
     if (dto.password === undefined || dto.password === null) {
       throw new Error('Validation password fail');
     }
     dto.password = await bcrypt.hash(dto.password, 10);
-    return super.create(dto);
+    return this.converter.toDto(
+      await new this.repository(this.converter.toSchemaCreate(dto)).save(),
+    );
   }
 
   async findByEmailPasswor(loginDto: {
