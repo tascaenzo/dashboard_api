@@ -14,6 +14,9 @@ export class UserDocument extends Document {
 
   @Prop()
   password: string;
+
+  @Prop({ default: false })
+  isBanned: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument);

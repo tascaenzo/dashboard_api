@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { IsEmail, IsMongoId, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsMongoId,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 @Injectable()
 export class UserDto {
@@ -16,6 +22,9 @@ export class UserDto {
 
   @IsString()
   readonly surname: string;
+
+  @IsBoolean()
+  isBanned: boolean;
 
   public constructor(dto?: Partial<UserDto>) {
     Object.assign(this, dto);

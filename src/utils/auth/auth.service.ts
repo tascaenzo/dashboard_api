@@ -25,7 +25,7 @@ export class AuthService {
       password: dto.password,
     });
 
-    if (!user) {
+    if (!user || user.isBanned) {
       throw new UnauthorizedException('Invalid email or password');
     }
 

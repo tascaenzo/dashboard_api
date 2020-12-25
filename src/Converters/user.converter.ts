@@ -9,9 +9,11 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
   toDto(schema: UserDocument): UserDto {
     if (schema === null) return null;
     return new UserDto({
+      id: schema._id,
       email: schema.email,
       name: schema.name,
       surname: schema.surname,
+      isBanned: schema.isBanned,
     });
   }
 
@@ -21,6 +23,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
       email: dto.email,
       name: dto.name,
       surname: dto.surname,
+      isBanned: dto.isBanned,
     };
   }
 
@@ -31,6 +34,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
       name: dto.name,
       surname: dto.surname,
       password: dto.password,
+      isBanned: false,
     };
   }
 }

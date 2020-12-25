@@ -18,7 +18,7 @@ export class UserService extends AService<UserDocument, UserDto> {
     super(repository, converter);
   }
 
-  async create(dto: UserCreateDto): Promise<UserDto> {
+  async createUser(dto: UserCreateDto): Promise<UserDto> {
     if (dto.password === undefined || dto.password === null) {
       throw new Error('Validation password fail');
     }

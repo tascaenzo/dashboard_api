@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 import { SessionService } from '@/utils/session/session.service';
 
 @Controller('users')
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class UserController extends AController<UserDto> {
   constructor(
     protected readonly service: UserService,
@@ -17,9 +17,14 @@ export class UserController extends AController<UserDto> {
     super(service);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  create(@Body() dto: UserDto): Promise<UserDto> {
+    throw new Error();
+  }
+
   @Post()
-  create(@Body() dto: UserCreateDto): Promise<UserDto> {
-    return this.service.create(dto);
+  createUser(@Body() dto: UserCreateDto): Promise<UserDto> {
+    return this.service.createUser(dto);
   }
 
   @Delete(':id')
