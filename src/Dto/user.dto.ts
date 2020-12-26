@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { RoleDto } from '@/utils/role/role.dto';
 import {
   IsBoolean,
   IsEmail,
   IsMongoId,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -25,6 +27,9 @@ export class UserDto {
 
   @IsBoolean()
   isBanned: boolean;
+
+  //@IsObject()
+  //readonly role: RoleDto;
 
   public constructor(dto?: Partial<UserDto>) {
     Object.assign(this, dto);
