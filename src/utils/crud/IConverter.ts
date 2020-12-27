@@ -1,7 +1,7 @@
 export interface IConverter<Schema, Dto> {
-  toDto(schema: Schema): Dto;
-  toSchema(dto: Dto): Schema;
+  toDto(schema: Schema): Promise<Dto>;
+  toSchema(dto: Dto): Promise<Schema>;
 
-  toSchemaList(dtoList: Dto[]): Schema[];
-  toDtoList(schemaList: Schema[]): Dto[];
+  toSchemaList(dtoList: Dto[]): Promise<Schema[]>;
+  toDtoList(schemaList: Schema[]): Promise<Dto[]>;
 }

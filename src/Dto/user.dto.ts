@@ -28,8 +28,8 @@ export class UserDto {
   @IsBoolean()
   isBanned: boolean;
 
-  //@IsObject()
-  //readonly role: RoleDto;
+  @IsObject()
+  readonly role: RoleDto;
 
   public constructor(dto?: Partial<UserDto>) {
     Object.assign(this, dto);

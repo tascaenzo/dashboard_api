@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema()
 export class UserDocument extends Document {
@@ -17,6 +17,9 @@ export class UserDocument extends Document {
 
   @Prop({ default: false })
   isBanned: boolean;
+
+  @Prop({ default: null })
+  roleId: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument);

@@ -14,10 +14,10 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     super();
   }
 
-  toDto(schema: RoleDocument): RoleDto {
+  async toDto(schema: RoleDocument): Promise<RoleDto> {
     if (schema === null) return null;
 
-    const collections: RoleCollectionDto[] = this.roleCollectionConverter.toDtoList(
+    const collections: RoleCollectionDto[] = await this.roleCollectionConverter.toDtoList(
       schema.collections,
     );
 
@@ -30,10 +30,10 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     });
   }
 
-  toSchema(dto: RoleDto): RoleDocument {
+  async toSchema(dto: RoleDto): Promise<RoleDocument> {
     if (dto === null) return null;
 
-    const collections: RoleCollectionDocument[] = this.roleCollectionConverter.toSchemaList(
+    const collections: RoleCollectionDocument[] = await this.roleCollectionConverter.toSchemaList(
       dto.collections,
     );
 

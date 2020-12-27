@@ -7,26 +7,26 @@ import { IConverter } from './IConverter';
 
 export abstract class AConverter<Schema, Dto>
   implements IConverter<Schema, Dto> {
-  toDto(schema: Schema): Dto {
+  async toDto(schema: Schema): Promise<Dto> {
     throw new Error('Method not implemented.');
   }
 
-  toSchema(dto: Dto): Schema {
+  async toSchema(dto: Dto): Promise<Schema> {
     throw new Error('Method not implemented.');
   }
 
-  toSchemaList(dtoList: Dto[]): Schema[] {
+  async toSchemaList(dtoList: Dto[]): Promise<Schema[]> {
     const tmp: Schema[] = [];
     for (const dto of dtoList) {
-      tmp.push(this.toSchema(dto));
+      tmp.push(await this.toSchema(dto));
     }
     return tmp;
   }
 
-  toDtoList(schemaList: Schema[]): Dto[] {
+  async toDtoList(schemaList: Schema[]): Promise<Dto[]> {
     const tmp: Dto[] = [];
     for (const schema of schemaList) {
-      tmp.push(this.toDto(schema));
+      tmp.push(await this.toDto(schema));
     }
     return tmp;
   }

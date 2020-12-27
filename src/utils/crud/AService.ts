@@ -11,7 +11,7 @@ export abstract class AService<Schema, Dto> implements IService<Dto> {
 
   async create(dto: Dto): Promise<Dto> {
     return this.converter.toDto(
-      await new this.repository(this.converter.toSchema(dto)).save(),
+      await new this.repository(await this.converter.toSchema(dto)).save(),
     );
   }
 
@@ -28,7 +28,10 @@ export abstract class AService<Schema, Dto> implements IService<Dto> {
   }
 
   async update(id: Types.ObjectId, dto: Dto): Promise<Dto> {
-    await this.repository.findByIdAndUpdate(id, this.converter.toSchema(dto));
+    await this.repository.findByIdAndUpdate(
+      id,
+      await this.converter.toSchema(dto),
+    );
     return this.findOne(id);
   }
 }

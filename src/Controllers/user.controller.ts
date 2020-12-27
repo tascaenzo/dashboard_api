@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 import { SessionService } from '@/utils/session/session.service';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 export class UserController extends AController<UserDto> {
   constructor(
     protected readonly service: UserService,

@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { SessionModule } from '../session/session.module';
 
 import { JWT_CONFIG } from '@/utils/env.json';
+import { RoleModule } from '../role/role.module';
 
 const jwtRegister = {
   secret: JWT_CONFIG.SECRET,
@@ -21,8 +22,14 @@ const jwtRegister = {
     UserModule,
     SessionModule,
     PassportModule,
+    RoleModule,
   ],
-  exports: [AuthService, SessionModule, JwtModule.register(jwtRegister)],
+  exports: [
+    AuthService,
+    SessionModule,
+    RoleModule,
+    JwtModule.register(jwtRegister),
+  ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
 })
