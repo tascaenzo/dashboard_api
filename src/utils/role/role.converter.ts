@@ -24,7 +24,8 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     return new RoleDto({
       id: schema._id,
       name: schema.name,
-      isRoot: schema.isRoot,
+      isAdmin: schema.isAdmin,
+      isDevelop: schema.isDevelop,
       collections,
       createdAt: schema.createdAt,
     });
@@ -39,7 +40,7 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
 
     return <RoleDocument>{
       name: dto.name,
-      isRoot: dto.isRoot,
+      isAdmin: dto.isAdmin,
       isDevelop: dto.isDevelop,
       collections,
       createdAt: dto.createdAt,

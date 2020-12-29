@@ -8,7 +8,7 @@ export class RoleDocument extends Document {
   name: string;
 
   @Prop({ default: false })
-  isRoot: boolean;
+  isAdmin: boolean;
 
   @Prop({ default: false })
   isDevelop: boolean;

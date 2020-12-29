@@ -3,7 +3,6 @@ import { UserService } from '@/Services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
-//import { jwtConstants } from './constants';
 import { SessionService } from '../session/session.service';
 import { SessionDto } from '../session/session.dto';
 

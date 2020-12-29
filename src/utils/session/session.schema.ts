@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { UserDto } from '@/Dto/user.dto';
 import { RoleCollectionDocument } from '../role/collection/role.collection.schema';
-import { UserDocument } from '@/Schemas/user.schema';
+//import { UserDocument } from '@/Schemas/user.schema';
+import { UserDto } from '@/Dto/user.dto';
 
 @Schema()
 export class SessionDocument extends Document {
   @Prop({
-    type: UserDocument,
+    type: UserDto,
     required: true,
   })
-  user: UserDocument;
+  user: UserDto;
 
   @Prop()
   ip: string;

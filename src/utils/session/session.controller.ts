@@ -1,6 +1,6 @@
 import { Req, UseGuards } from '@nestjs/common';
-import { Delete, Get, Put } from '@nestjs/common';
-import { Body, Param } from '@nestjs/common';
+import { Delete, Get } from '@nestjs/common';
+import { Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AController } from '@/utils/crud/AController';
 import { SessionDto } from './session.dto';
@@ -15,13 +15,6 @@ export class SessionController extends AController<SessionDto> {
     super(service);
   }
 
-  /*
-   * override of methods defined in AController
-   * because swagger decorators do not support generics,
-   * so to get the correct documentation you need to use
-   * reals and not generics <dto>
-   */
-
   @Delete('/expired')
   removeSessionExpired(): void {
     this.service.removeSessionExpired();
@@ -29,6 +22,7 @@ export class SessionController extends AController<SessionDto> {
 
   @Delete('/byUser/:id')
   removeSessionByUser(@Param('id') id: Types.ObjectId): void {
+    console.log(id);
     this.service.removeByUser(id, null);
   }
 
@@ -54,10 +48,5 @@ export class SessionController extends AController<SessionDto> {
   async findCurrent(@Req() req): Promise<SessionDto> {
     const token = req.headers.authorization.split(' ')[1];
     return await this.service.findByToken(token);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: Types.ObjectId, @Body() dto: SessionDto) {
-    return super.update(id, dto);
   }
 }

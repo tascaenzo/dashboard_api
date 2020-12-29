@@ -31,6 +31,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
     if (dto === null) return null;
 
     return <UserDocument>{
+      //_id: dto.id,
       email: dto.email,
       name: dto.name,
       surname: dto.surname,

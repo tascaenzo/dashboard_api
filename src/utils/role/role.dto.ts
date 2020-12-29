@@ -18,7 +18,7 @@ export class RoleDto {
   readonly name: string;
 
   @IsBoolean()
-  readonly isRoot: boolean;
+  readonly isAdmin: boolean;
 
   @IsBoolean()
   readonly isDevelop: boolean;

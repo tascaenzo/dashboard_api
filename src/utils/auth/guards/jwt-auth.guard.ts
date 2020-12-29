@@ -1,10 +1,13 @@
+import { RoleService } from '@/utils/role/role.service';
 import { SessionService } from '@/utils/session/session.service';
 import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
   Logger,
+  SetMetadata,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { Types } from 'mongoose';
@@ -16,12 +19,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private readonly sessionService: SessionService,
     private readonly jwtService: JwtService,
+    private reflector: Reflector,
   ) {
     super();
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
+      const roles = this.reflector.get<string[]>('roles', context.getHandler());
       const request = context.switchToHttp().getRequest();
       const { authorization } = request.headers;
 
@@ -36,7 +41,32 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       );
 
       if (session !== null) {
-        return true;
+        const { user } = session;
+
+        const userRole = user.role;
+
+        if (roles === undefined) {
+          return true;
+        }
+
+        if (roles.includes('develop')) {
+          return userRole.isDevelop;
+        }
+        if (roles.includes('admin')) {
+          return userRole.isAdmin;
+        }
+        if (userRole.isAdmin || userRole.isAdmin) {
+          return true;
+        }
+
+        for (const i in userRole.collections) {
+          console.log(userRole.collections[i]);
+        }
+
+        //if(roles.includes('develop'))
+        //console.log('********', roles);
+
+        console.log(session);
       }
 
       this.logger.warn('Auth fail session not valid');
@@ -47,3 +77,5 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
   }
 }
+
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);

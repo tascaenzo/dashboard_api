@@ -1,4 +1,3 @@
-import { UserConverter } from '@/Converters/user.converter';
 import { AConverter } from '@/utils/crud/AConverter';
 import { Injectable } from '@nestjs/common';
 import { SessionDto } from './session.dto';
@@ -6,7 +5,7 @@ import { SessionDocument } from './session.schema';
 
 @Injectable()
 export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
-  constructor(private readonly userConverter: UserConverter) {
+  constructor() {
     super();
   }
 
@@ -14,7 +13,7 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
     if (schema === null) return null;
     return new SessionDto({
       id: schema._id,
-      user: await this.userConverter.toDto(schema.user),
+      user: schema.user,
       ip: schema.ip,
       userAgent: schema.userAgent,
       token: schema.token,
@@ -31,7 +30,7 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
     if (dto === null) return null;
     return <SessionDocument>{
       //_id: dto.id,
-      user: await this.userConverter.toSchema(dto.user),
+      user: dto.user,
       ip: dto.ip,
       userAgent: dto.userAgent,
       token: dto.token,
