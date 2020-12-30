@@ -1,6 +1,6 @@
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule, Module } from '@nestjs/common';
-import { SessionSchema } from './session.schema';
+import { COLLECTION_NAME, SessionSchema } from './session.schema';
 import { SessionController } from './session.controller';
 import { SessionConverter } from './session.converter';
 import { SessionService } from './session.service';
@@ -12,7 +12,9 @@ import { CACHE_CONFIG } from '@/utils/env.json';
 @Module({
   imports: [
     UserModule,
-    MongooseModule.forFeature([{ name: 'Session', schema: SessionSchema }]),
+    MongooseModule.forFeature([
+      { name: COLLECTION_NAME, schema: SessionSchema },
+    ]),
     CacheModule.register({
       store: redisStore,
       host: CACHE_CONFIG.HOST,

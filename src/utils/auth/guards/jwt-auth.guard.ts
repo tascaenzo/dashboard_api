@@ -1,4 +1,3 @@
-import { RoleService } from '@/utils/role/role.service';
 import { SessionService } from '@/utils/session/session.service';
 import {
   ExecutionContext,
@@ -26,7 +25,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      const roles = this.reflector.get<string[]>('roles', context.getHandler());
+      const roles =
+        this.reflector.get<string[]>('roles', context.getHandler()) ||
+        this.reflector.get<string[]>('roles', context.getClass());
+
       const request = context.switchToHttp().getRequest();
       const { authorization } = request.headers;
 

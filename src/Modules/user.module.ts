@@ -2,12 +2,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
 import { UserController } from '@/Controllers/user.controller';
 import { UserConverter } from '@/Converters/user.converter';
-import { UserSchema } from '@/Schemas/user.schema';
+import { UserSchema, COLLECTION_NAME } from '@/Schemas/user.schema';
 import { UserService } from '@/Services/user.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: COLLECTION_NAME, schema: UserSchema }]),
     /* CacheModule.register({
       store: redisStore,
       host: 'localhost',

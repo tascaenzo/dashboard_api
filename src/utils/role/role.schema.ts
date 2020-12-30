@@ -2,6 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { RoleCollectionDocument } from './collection/role.collection.schema';
 
+export const COLLECTION_NAME = 'Role';
+export const NAME_PLURAL = 'roles';
+
 @Schema()
 export class RoleDocument extends Document {
   @Prop({ required: true })

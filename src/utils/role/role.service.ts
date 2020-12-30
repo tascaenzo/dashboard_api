@@ -5,13 +5,13 @@ import { Model, Types } from 'mongoose';
 import { AService } from '@/utils/crud/AService';
 import { RoleConverter } from './role.converter';
 import { RoleDto } from './role.dto';
-import { RoleDocument } from './role.schema';
+import { COLLECTION_NAME, RoleDocument } from './role.schema';
 
 @Injectable()
 export class RoleService extends AService<RoleDocument, RoleDto> {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager,
-    @InjectModel('Role')
+    @InjectModel(COLLECTION_NAME)
     protected readonly repository: Model<RoleDocument>,
     protected readonly converter: RoleConverter,
   ) {

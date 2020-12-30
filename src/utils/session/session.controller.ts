@@ -7,8 +7,9 @@ import { SessionDto } from './session.dto';
 import { SessionService } from './session.service';
 import { Types } from 'mongoose';
 import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
+import { NAME_PLURAL } from './session.schema';
 
-@Controller('sessions')
+@Controller(NAME_PLURAL)
 @UseGuards(JwtAuthGuard)
 export class SessionController extends AController<SessionDto> {
   constructor(protected readonly service: SessionService) {

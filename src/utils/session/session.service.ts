@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose';
 import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { AService } from '@/utils/crud/AService';
-import { SessionDocument } from './session.schema';
+import { COLLECTION_NAME, SessionDocument } from './session.schema';
 import { SessionDto } from './session.dto';
 import { SessionConverter } from './session.converter';
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
@@ -14,7 +14,7 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
 
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager,
-    @InjectModel('Session')
+    @InjectModel(COLLECTION_NAME)
     protected readonly repository: Model<SessionDocument>,
     protected readonly converter: SessionConverter,
   ) {
