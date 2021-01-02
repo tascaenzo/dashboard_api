@@ -1,3 +1,4 @@
+import { RoleService } from '@/utils/role/role.service';
 import { SessionService } from '@/utils/session/session.service';
 import {
   ExecutionContext,
@@ -17,6 +18,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   constructor(
     private readonly sessionService: SessionService,
+    private readonly roleService: RoleService,
     private readonly jwtService: JwtService,
     private reflector: Reflector,
   ) {
@@ -45,11 +47,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       if (session !== null) {
         const { user } = session;
 
-        const userRole = user.role;
-
         if (roles === undefined) {
           return true;
         }
+
+        if (user.role === undefined || user.role === null) {
+          return false;
+        }
+
+        const userRole = await this.roleService.findOne(user.role.id);
 
         if (roles.includes('develop')) {
           return userRole.isDevelop;
@@ -62,13 +68,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         }
 
         for (const i in userRole.collections) {
-          console.log(userRole.collections[i]);
+          if (roles.includes(userRole.collections[i].name)) {
+            switch (request.method) {
+              case 'GET':
+                return userRole.collections[i].canRead;
+              case 'POST':
+                return userRole.collections[i].canCreate;
+              case 'PUT':
+                return userRole.collections[i].canUpdate;
+              case 'DELETE':
+                return userRole.collections[i].canDelete;
+              default:
+                return false;
+            }
+          }
         }
-
-        //if(roles.includes('develop'))
-        //console.log('********', roles);
-
-        console.log(session);
+        return false;
       }
 
       this.logger.warn('Auth fail session not valid');

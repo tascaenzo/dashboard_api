@@ -4,8 +4,8 @@ export class RoleCollectionDto {
   @IsString()
   readonly name: string;
 
-  @IsBoolean()
-  readonly isPublic: boolean;
+  //@IsBoolean()
+  //readonly isPublic: boolean;
 
   @IsBoolean()
   readonly canCreate: boolean;

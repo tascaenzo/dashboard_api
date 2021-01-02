@@ -18,7 +18,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
       role = await this.roleService.findOne(schema.roleId);
     }
     return new UserDto({
-      id: schema._id,
+      id: schema._id === undefined ? null : schema._id,
       email: schema.email,
       name: schema.name,
       surname: schema.surname,
@@ -31,7 +31,7 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
     if (dto === null) return null;
 
     return <UserDocument>{
-      //_id: dto.id,
+      id: dto.id === undefined ? null : dto.id,
       email: dto.email,
       name: dto.name,
       surname: dto.surname,

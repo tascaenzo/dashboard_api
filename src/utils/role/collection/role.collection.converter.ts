@@ -10,11 +10,23 @@ export class RoleCollectionConverter extends AConverter<
 > {
   async toDto(schema: RoleCollectionDocument): Promise<RoleCollectionDto> {
     if (schema === null) return null;
-    return new RoleCollectionDto(schema);
+    return {
+      name: schema.name,
+      canCreate: schema.canCreate,
+      canRead: schema.canRead,
+      canUpdate: schema.canUpdate,
+      canDelete: schema.canDelete,
+    };
   }
 
   async toSchema(dto: RoleCollectionDto): Promise<RoleCollectionDocument> {
     if (dto === null) return null;
-    return new RoleCollectionDocument(dto);
+    return <RoleCollectionDocument>{
+      name: dto.name,
+      canCreate: dto.canCreate,
+      canRead: dto.canRead,
+      canUpdate: dto.canUpdate,
+      canDelete: dto.canDelete,
+    };
   }
 }

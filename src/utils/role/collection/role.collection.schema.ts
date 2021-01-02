@@ -10,8 +10,8 @@ export class RoleCollectionDocument extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ default: false })
-  isPublic: boolean;
+  //@Prop({ default: false })
+  //isPublic: boolean;
 
   @Prop({ default: false })
   canCreate: boolean;

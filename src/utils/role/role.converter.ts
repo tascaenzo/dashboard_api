@@ -22,7 +22,7 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     );
 
     return new RoleDto({
-      id: schema._id,
+      id: schema._id === undefined ? null : schema._id,
       name: schema.name,
       isAdmin: schema.isAdmin,
       isDevelop: schema.isDevelop,
@@ -39,6 +39,7 @@ export class RoleConverter extends AConverter<RoleDocument, RoleDto> {
     );
 
     return <RoleDocument>{
+      _id: dto.id === undefined ? null : dto.id,
       name: dto.name,
       isAdmin: dto.isAdmin,
       isDevelop: dto.isDevelop,
