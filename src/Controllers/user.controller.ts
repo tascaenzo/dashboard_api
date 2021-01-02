@@ -4,7 +4,6 @@ import { AController } from '@/utils/crud/AController';
 import { UserCreateDto, UserDto } from '@/Dto/user.dto';
 import { UserService } from '@/Services/user.service';
 import { JwtAuthGuard, Roles } from '@/utils/auth/guards/jwt-auth.guard';
-import { Types } from 'mongoose';
 import { SessionService } from '@/utils/session/session.service';
 import { NAME_PLURAL } from '@/Schemas/user.schema';
 
@@ -30,14 +29,16 @@ export class UserController extends AController<UserDto> {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: Types.ObjectId): Promise<UserDto> {
+  async remove(
+    @Param('id') id: string,
+  ): Promise<{ ok?: number; n?: number } & { deletedCount?: number }> {
     await this.sessionService.removeByUser(id, null);
     return super.remove(id);
   }
 
   @Put(':id')
   async update(
-    @Param('id') id: Types.ObjectId,
+    @Param('id') id: string,
     @Body() dto: UserDto,
   ): Promise<UserDto> {
     const user: UserDto = await super.update(id, dto);

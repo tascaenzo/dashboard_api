@@ -6,13 +6,12 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Types } from 'mongoose';
 import { RoleCollectionDto } from './collection/role.collection.dto';
 
 export class RoleDto {
   @IsMongoId()
   @IsOptional()
-  readonly id: Types.ObjectId;
+  readonly id: string;
 
   @IsString()
   readonly name: string;

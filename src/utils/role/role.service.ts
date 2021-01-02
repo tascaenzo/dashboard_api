@@ -1,6 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { AService } from '@/utils/crud/AService';
 import { RoleConverter } from './role.converter';
@@ -19,7 +19,7 @@ export class RoleService extends AService<RoleDocument, RoleDto> {
   }
 
   /* Override to save or return cache */
-  async findOne(id: Types.ObjectId): Promise<RoleDto> {
+  async findOne(id: string): Promise<RoleDto> {
     let roleCache: RoleDto = await this.cacheManager.get(id.toString());
     if (roleCache !== null) {
       return roleCache;
@@ -34,7 +34,9 @@ export class RoleService extends AService<RoleDocument, RoleDto> {
   }
 
   /* Override to remove cache */
-  async remove(id: Types.ObjectId): Promise<RoleDto> {
+  async remove(
+    id: string,
+  ): Promise<{ ok?: number; n?: number } & { deletedCount?: number }> {
     const role = await super.findOne(id);
     if (role !== null) {
       if (this.cacheManager.get(id.toString()) !== null) {
@@ -45,7 +47,7 @@ export class RoleService extends AService<RoleDocument, RoleDto> {
   }
 
   /* Override to remove cache */
-  async update(id: Types.ObjectId, dto: RoleDto) {
+  async update(id: string, dto: RoleDto) {
     const role = await super.findOne(id);
 
     if (role !== null) {

@@ -10,7 +10,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -40,9 +39,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
       const token = authorization.split(' ')[1];
       const pyload = this.jwtService.verify(token);
-      const session = await this.sessionService.findOne(
-        new Types.ObjectId(pyload.sessionId),
-      );
+      const session = await this.sessionService.findOne(pyload.sessionId);
 
       if (session !== null) {
         const { user } = session;

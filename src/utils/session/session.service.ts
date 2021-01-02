@@ -40,15 +40,15 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     return this.converter.toDto(await this.repository.findOne({ token }));
   }
 
-  async findByUser(id: Types.ObjectId): Promise<SessionDto[]> {
+  async findByUser(id: string): Promise<SessionDto[]> {
     return this.converter.toDtoList(
-      await this.repository.find({ 'user.id': new Types.ObjectId(id) }),
+      await this.repository.find({ 'user._id': id }),
     );
   }
 
   /* Override to save or return cache */
-  async findOne(id: Types.ObjectId): Promise<SessionDto> {
-    let sessionCache: SessionDto = await this.cacheManager.get(id.toString());
+  async findOne(id: string): Promise<SessionDto> {
+    let sessionCache: SessionDto = await this.cacheManager.get(id);
     if (sessionCache !== null) {
       return sessionCache;
     }
@@ -56,29 +56,31 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
     sessionCache = await super.findOne(id);
 
     if (sessionCache !== null) {
-      await this.cacheManager.set(id.toString(), sessionCache);
+      await this.cacheManager.set(id, sessionCache);
     }
     return sessionCache;
   }
 
   /* Override to remove cache */
-  async remove(id: Types.ObjectId): Promise<SessionDto> {
+  async remove(
+    id: string,
+  ): Promise<{ ok?: number; n?: number } & { deletedCount?: number }> {
     const session = await super.findOne(id);
     if (session !== null) {
-      if (this.cacheManager.get(id.toString()) !== null) {
-        this.cacheManager.del(id.toString());
+      if (this.cacheManager.get(id !== null)) {
+        this.cacheManager.del(id);
       }
     }
     return await super.remove(id);
   }
 
   /* it does not remove currentSessionId but if you want to delete everything set it to null  */
-  async removeByUser(id: Types.ObjectId, currentSessionId: Types.ObjectId) {
+  async removeByUser(id: string, currentSessionId: string) {
     /* not useed this code because not remove cache */
-    /* return await this.repository.remove({ 'user.id': new Types.ObjectId(id) }); */
+    /* return await this.repository.remove({ 'user._id': new Types.ObjectId(id) }); */
 
     const lists = await this.repository.find({
-      'user.id': new Types.ObjectId(id),
+      'user._id': new Types.ObjectId(id),
     });
 
     lists.forEach((el) => {
@@ -96,7 +98,7 @@ export class SessionService extends AService<SessionDocument, SessionDto> {
   }
 
   /* Override to remove cache */
-  async update(id: Types.ObjectId, dto: SessionDto) {
+  async update(id: string, dto: SessionDto) {
     const session = await super.findOne(id);
 
     if (session !== null) {

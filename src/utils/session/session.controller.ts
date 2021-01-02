@@ -5,7 +5,6 @@ import { Controller } from '@nestjs/common';
 import { AController } from '@/utils/crud/AController';
 import { SessionDto } from './session.dto';
 import { SessionService } from './session.service';
-import { Types } from 'mongoose';
 import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 import { NAME_PLURAL } from './session.schema';
 
@@ -22,8 +21,7 @@ export class SessionController extends AController<SessionDto> {
   }
 
   @Delete('/byUser/:id')
-  removeSessionByUser(@Param('id') id: Types.ObjectId): void {
-    console.log(id);
+  removeSessionByUser(@Param('id') id: string): void {
     this.service.removeByUser(id, null);
   }
 
@@ -34,7 +32,7 @@ export class SessionController extends AController<SessionDto> {
   }
 
   @Get('/byUser/:id')
-  findByUser(@Param('id') id: Types.ObjectId): Promise<SessionDto[]> {
+  findByUser(@Param('id') id: string): Promise<SessionDto[]> {
     return this.service.findByUser(id);
   }
 

@@ -14,7 +14,7 @@ import {
 export class UserDto {
   @IsMongoId()
   @IsOptional()
-  readonly id: Types.ObjectId;
+  readonly id: string;
 
   @IsEmail()
   readonly email: string;

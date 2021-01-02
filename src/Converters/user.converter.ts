@@ -5,6 +5,7 @@ import { AConverter } from '@/utils/crud/AConverter';
 import { Injectable } from '@nestjs/common';
 import { RoleService } from '@/utils/role/role.service';
 import { RoleDto } from '@/utils/role/role.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class UserConverter extends AConverter<UserDocument, UserDto> {
@@ -15,10 +16,11 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
     let role: RoleDto = null;
     if (schema === null) return null;
     if (schema.roleId !== null) {
-      role = await this.roleService.findOne(schema.roleId);
+      role = await this.roleService.findOne(schema.roleId.toString());
     }
+    const id = schema._id.toString();
     return new UserDto({
-      id: schema._id === undefined ? null : schema._id,
+      id,
       email: schema.email,
       name: schema.name,
       surname: schema.surname,
@@ -31,12 +33,12 @@ export class UserConverter extends AConverter<UserDocument, UserDto> {
     if (dto === null) return null;
 
     return <UserDocument>{
-      id: dto.id === undefined ? null : dto.id,
+      _id: dto.id,
       email: dto.email,
       name: dto.name,
       surname: dto.surname,
       isBanned: dto.isBanned,
-      roleId: dto.role !== null ? dto.role.id : null,
+      roleId: new Types.ObjectId(dto.role.id),
     };
   }
 

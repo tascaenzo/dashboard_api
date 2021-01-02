@@ -12,8 +12,9 @@ export class SessionConverter extends AConverter<SessionDocument, SessionDto> {
 
   async toDto(schema: SessionDocument): Promise<SessionDto> {
     if (schema === null) return null;
+    const id = schema._id.toString();
     return new SessionDto({
-      id: schema._id === undefined ? null : schema._id,
+      id,
       user: await this.userConverter.toDto(schema.user),
       ip: schema.ip,
       userAgent: schema.userAgent,

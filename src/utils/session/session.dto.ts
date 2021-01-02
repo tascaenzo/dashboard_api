@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
 import { UserDto } from '@/Dto/user.dto';
 import {
   IsDate,
@@ -17,7 +16,7 @@ import {
 export class SessionDto {
   @IsMongoId()
   @IsOptional()
-  readonly id: Types.ObjectId;
+  readonly id: string;
 
   @IsObject()
   readonly user: UserDto;
