@@ -15,6 +15,15 @@ async function bootstrap() {
   /* automatically validates the DTO in the body request */
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({
+    //origin: ['http://localhost:8080', 'http://192.168.1.70:8080'],
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: false,
+  });
+
   await app.listen(PORT, BIND_ADDRESS);
 }
 bootstrap();
