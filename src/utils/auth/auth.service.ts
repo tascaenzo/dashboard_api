@@ -25,7 +25,7 @@ export class AuthService {
     });
 
     if (!user || user.isBanned) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException(['Invalid email or password']);
     }
     const session = await this.sessionService.create(<SessionDto>{ user });
 
