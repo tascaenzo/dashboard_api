@@ -1,7 +1,12 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '@/Services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
+import {
+  JwtAuthDto,
+  LoginDto,
+  RefreshTokenDto,
+  SessionStatusDto,
+} from './auth.dto';
 import { UserDto } from '@/Dto/user.dto';
 import { SessionService } from '../session/session.service';
 import { SessionDto } from '../session/session.dto';
@@ -161,6 +166,33 @@ export class AuthService {
       this.logger.error(e);
       throw new UnauthorizedException(e.message);
     }
+  }
+
+  async status(token: string): Promise<SessionStatusDto> {
+    const session = await this.sessionService.findByToken(token);
+    const pyloadToken = this.jwtService.decode(token);
+    const sessionStatus = new SessionStatusDto();
+
+    if (session !== null || session !== undefined) {
+      sessionStatus.isValid = true;
+    } else {
+      sessionStatus.isValid = false;
+      sessionStatus.isRefreshable = false;
+      sessionStatus.isExpired = true;
+      return sessionStatus;
+    }
+
+    sessionStatus.isExpired = Date.now() > pyloadToken['exp'] * 1000;
+    if (
+      session.refreshToken !== null &&
+      session.refreshToken !== undefined &&
+      sessionStatus.isExpired === true
+    ) {
+      sessionStatus.isRefreshable = new Date() < session.expiredSessionAt;
+    } else {
+      sessionStatus.isRefreshable = false;
+    }
+    return sessionStatus;
   }
 
   async me(jwt: string): Promise<UserDto> {

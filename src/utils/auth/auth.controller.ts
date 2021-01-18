@@ -11,7 +11,12 @@ import {
 } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
 import { SessionService } from '../session/session.service';
-import { JwtAuthDto, LoginDto, RefreshTokenDto } from './auth.dto';
+import {
+  JwtAuthDto,
+  LoginDto,
+  RefreshTokenDto,
+  SessionStatusDto,
+} from './auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -45,6 +50,12 @@ export class AuthController {
     @Req() req,
   ): Promise<JwtAuthDto> {
     return await this.authService.refresh(dto, req);
+  }
+
+  @Get('status')
+  async status(@Req() req): Promise<SessionStatusDto> {
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return this.authService.status(token);
   }
 
   @Get('me')

@@ -51,3 +51,14 @@ export class RefreshTokenDto {
   @IsJWT()
   readonly refreshToken: string;
 }
+
+export class SessionStatusDto {
+  @IsBoolean()
+  isValid: boolean;
+
+  @IsBoolean()
+  isExpired: boolean;
+
+  @IsBoolean()
+  isRefreshable: boolean;
+}
