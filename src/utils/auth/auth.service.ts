@@ -169,30 +169,38 @@ export class AuthService {
   }
 
   async status(token: string): Promise<SessionStatusDto> {
-    const session = await this.sessionService.findByToken(token);
-    const pyloadToken = this.jwtService.decode(token);
-    const sessionStatus = new SessionStatusDto();
+    try {
+      const session = await this.sessionService.findByToken(token);
+      const pyloadToken = this.jwtService.decode(token);
+      const sessionStatus = new SessionStatusDto();
 
-    if (session !== null || session !== undefined) {
-      sessionStatus.isValid = true;
-    } else {
-      sessionStatus.isValid = false;
-      sessionStatus.isRefreshable = false;
-      sessionStatus.isExpired = true;
+      if (session !== null || session !== undefined) {
+        sessionStatus.isValid = true;
+      } else {
+        sessionStatus.isValid = false;
+        sessionStatus.isRefreshable = false;
+        sessionStatus.isExpired = true;
+        return sessionStatus;
+      }
+
+      sessionStatus.isExpired = Date.now() > pyloadToken['exp'] * 1000;
+      if (
+        session.refreshToken !== null &&
+        session.refreshToken !== undefined &&
+        sessionStatus.isExpired === true
+      ) {
+        sessionStatus.isRefreshable = new Date() < session.expiredSessionAt;
+      } else {
+        sessionStatus.isRefreshable = false;
+      }
       return sessionStatus;
+    } catch (e) {
+      const status = new SessionStatusDto();
+      status.isValid = false;
+      status.isRefreshable = false;
+      status.isExpired = true;
+      return status;
     }
-
-    sessionStatus.isExpired = Date.now() > pyloadToken['exp'] * 1000;
-    if (
-      session.refreshToken !== null &&
-      session.refreshToken !== undefined &&
-      sessionStatus.isExpired === true
-    ) {
-      sessionStatus.isRefreshable = new Date() < session.expiredSessionAt;
-    } else {
-      sessionStatus.isRefreshable = false;
-    }
-    return sessionStatus;
   }
 
   async me(jwt: string): Promise<UserDto> {
