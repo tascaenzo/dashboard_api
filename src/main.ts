@@ -15,6 +15,9 @@ async function bootstrap() {
   /* automatically validates the DTO in the body request */
   app.useGlobalPipes(new ValidationPipe());
 
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  app.register(require('fastify-multipart'));
+
   app.enableCors({
     //origin: ['http://localhost:8080', 'http://192.168.1.70:8080'],
     origin: '*',

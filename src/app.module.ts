@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { UserModule } from '@/Modules/user.module';
 import { AuthModule } from '@/utils/auth/auth.module';
 import { SessionModule } from '@/utils/session/session.module';
+import { MediaModule } from '@/utils/media/media.module';
 import { AppController } from './Controllers/app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleModule } from './utils/role/role.module';
@@ -22,6 +23,7 @@ const jwtRegister = {
     AuthModule,
     SessionModule,
     UserModule,
+    MediaModule,
     ScheduleModule.forRoot(),
     JwtModule.register(jwtRegister),
     MongooseModule.forRoot(DB_URI, {
