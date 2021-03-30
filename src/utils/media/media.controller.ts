@@ -8,11 +8,15 @@ import fastify = require('fastify');
 import { MediaService } from './media.service';
 //import { JwtAuthGuard /*Roles*/ } from '@/utils//auth/guards/jwt-auth.guard';
 import { NAME_PLURAL } from './media.schema';
+import { AController } from '../crud/AController';
+import { MediaDto } from './media.dto';
 
 @Controller(NAME_PLURAL)
 //@UseGuards(JwtAuthGuard)
-export class MediaController {
-  constructor(protected readonly service: MediaService) {}
+export class MediaController extends AController<MediaDto> {
+  constructor(protected readonly service: MediaService) {
+    super(service);
+  }
 
   @Post('/uploadFile')
   async uploadFile(
